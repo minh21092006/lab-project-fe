@@ -7,6 +7,8 @@ from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from django.http import HttpResponseRedirect
 from django.views import View
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
 # Module imports
 from plane.authentication.provider.credentials.email import EmailProvider
@@ -24,6 +26,7 @@ from plane.authentication.adapter.error import (
 from plane.utils.path_validator import get_safe_redirect_url
 
 
+@method_decorator(csrf_exempt, name="dispatch")
 class SignInAuthEndpoint(View):
     # Rate-limit password auth attempts before any DB access, using the same
     # AuthenticationThrottle the magic-code views use (default 10/minute,
@@ -137,6 +140,7 @@ class SignInAuthEndpoint(View):
             return HttpResponseRedirect(url)
 
 
+@method_decorator(csrf_exempt, name="dispatch")
 class SignUpAuthEndpoint(View):
     @throttle_auth_redirect(is_app=True)
     def post(self, request):

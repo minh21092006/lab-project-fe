@@ -6,6 +6,8 @@
 from django.core.validators import validate_email
 from django.http import HttpResponseRedirect
 from django.views import View
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from django.utils.http import url_has_allowed_host_and_scheme
 
 # Third party imports
@@ -59,6 +61,7 @@ class MagicGenerateSpaceEndpoint(APIView):
             return Response(e.get_error_dict(), status=status.HTTP_400_BAD_REQUEST)
 
 
+@method_decorator(csrf_exempt, name="dispatch")
 class MagicSignInSpaceEndpoint(View):
     @throttle_auth_redirect(is_space=True)
     def post(self, request):
@@ -119,6 +122,7 @@ class MagicSignInSpaceEndpoint(View):
             return HttpResponseRedirect(url)
 
 
+@method_decorator(csrf_exempt, name="dispatch")
 class MagicSignUpSpaceEndpoint(View):
     @throttle_auth_redirect(is_space=True)
     def post(self, request):

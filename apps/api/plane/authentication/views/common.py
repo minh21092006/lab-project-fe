@@ -37,11 +37,13 @@ class CSRFTokenEndpoint(APIView):
 
 def csrf_failure(request, reason=""):
     """Custom CSRF failure view"""
+    _logger.warning("CSRF failure: %s", reason)
     return render(
         request,
         "csrf_failure.html",
         {"reason": reason, "root_url": base_host(request=request)},
     )
+
 
 
 class ChangePasswordEndpoint(APIView):

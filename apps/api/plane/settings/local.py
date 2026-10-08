@@ -87,3 +87,23 @@ LOGGING = {
         },
     },
 }
+
+# Proxy SSL and Cross-Origin Cookie settings for Cloudflare tunnel & Vercel deployment
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SAMESITE = "None"
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = "None"
+CORS_ALLOW_HEADERS = [*default_headers, "X-API-Key", "ngrok-skip-browser-warning"]
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^https:\/\/.*\.vercel\.app$",
+    r"^https:\/\/.*\.trycloudflare\.com$",
+]
+CSRF_TRUSTED_ORIGINS = [
+    *globals().get("CSRF_TRUSTED_ORIGINS", []),
+    "https://*.vercel.app",
+    "https://*.trycloudflare.com",
+]
+
+
+

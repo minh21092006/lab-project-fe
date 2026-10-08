@@ -55,6 +55,10 @@ def base_host(
 
     # App Redirection
     if is_app:
+        req_meta = getattr(request, "META", {}) if request else {}
+        req_origin = req_meta.get("HTTP_ORIGIN") or ""
+        if "vercel.app" in req_origin:
+            return req_origin.rstrip("/")
         if settings.APP_BASE_URL:
             return settings.APP_BASE_URL
         else:

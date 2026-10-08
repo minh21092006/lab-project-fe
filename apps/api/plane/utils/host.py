@@ -22,7 +22,12 @@ def base_host(
 ) -> str:
     """Utility function to return host / origin from the request"""
     # Calculate the base origin from request
-    base_origin = settings.WEB_URL or settings.APP_BASE_URL
+    req_meta = getattr(request, "META", {}) if request else {}
+    req_origin = req_meta.get("HTTP_ORIGIN") or ""
+    if "vercel.app" in req_origin:
+        base_origin = req_origin.rstrip("/")
+    else:
+        base_origin = settings.WEB_URL or settings.APP_BASE_URL
 
     if not base_origin:
         raise ImproperlyConfigured("APP_BASE_URL or WEB_URL is not set")
@@ -59,6 +64,10 @@ def base_host(
 
     # App Redirection
     if is_app:
+        req_meta = getattr(request, "META", {}) if request else {}
+        req_origin = req_meta.get("HTTP_ORIGIN") or ""
+        if "vercel.app" in req_origin:
+            return req_origin.rstrip("/")
         if settings.APP_BASE_URL:
             return settings.APP_BASE_URL
         else:

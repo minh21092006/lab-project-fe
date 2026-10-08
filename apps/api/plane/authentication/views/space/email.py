@@ -7,6 +7,8 @@ from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from django.http import HttpResponseRedirect
 from django.views import View
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from django.utils.http import url_has_allowed_host_and_scheme
 
 # Module imports
@@ -23,6 +25,7 @@ from plane.authentication.adapter.error import (
 from plane.utils.path_validator import get_safe_redirect_url, validate_next_path, get_allowed_hosts
 
 
+@method_decorator(csrf_exempt, name="dispatch")
 class SignInAuthSpaceEndpoint(View):
     @throttle_auth_redirect(is_space=True)
     def post(self, request):
@@ -109,6 +112,7 @@ class SignInAuthSpaceEndpoint(View):
             return HttpResponseRedirect(url)
 
 
+@method_decorator(csrf_exempt, name="dispatch")
 class SignUpAuthSpaceEndpoint(View):
     @throttle_auth_redirect(is_space=True)
     def post(self, request):
